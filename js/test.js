@@ -7,3 +7,10 @@ console.log( 25 || null && !3 ); //25
 console.log( NaN || null || !3 || undefined || 5); // 5
 console.log( NaN || null && !3 && undefined || 5); // 5
 console.log( 5 === 5 && 3 > 1 || 5); // true
+
+let result = '';
+const length = 7;
+
+for (let i = 1; i < length; i++) {
+  result += '*'
+}
