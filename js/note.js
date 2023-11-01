@@ -4,13 +4,44 @@
 /*
 Щоб невиникала колізія, у ложеному циклі використовують замість і – j (негласний стандарт), потім k і так далі.
 
+Мій варіант вирішення:
 let result = '';
 const length = 7;
 
 for (let i = 1; i < length; i++) {
-  
+  result += '*';
+  console.log(result)
 }
+
+Варіант з уроку:
+let result = '';
+const length = 7;
+
+for (let i = 1; i < length; i++) {
+  for (let j = 0; j < i; j++) {
+    result += '*';
+  }
+  result += '\n'; //перенос на новий рядок
+}
+------------------------------
+
+Як зупинити вкладений цикл і продовжити основний?
+Потрібно використати мітку, це може бути будь яке слово, в прикладі "first:"
+first: for (let i = 0; i < 3; i++) {
+  console.log(`First level: ${i}`)
+
+  for (let j = 0; j < 3; j++) {
+    console.log(`Second level: ${j}`)
+
+    for (let k = 0; k < 3; k++) {
+      if (k === 2) continue first;
+      console.log(`Third level: ${k}`)
+    }
+  }
+}
+Таким чином за допомогою мітки, ми можемо вказати, що буде після пропуску чи зупинки
 */
+// #endregion
 
 // #region 22 - Цикли
 /*
