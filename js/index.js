@@ -39,7 +39,7 @@ for (let i = 0; i < 2; i++) {
   const q1 = prompt('Останній фільм, який ви дивились?', ''),
         q2 = prompt('Як би ви його оцінили?', '');
 
-  if (q1 != null && q2 != null && q1 != '' && q2 != "" && q1.length < 50) {
+  if (q1 != null && q2 != null && q1 != '' && q2 != '' && q1.length < 50) {
     personalMovieDB.movies[q1] = q2; 
   } else {
     i--;

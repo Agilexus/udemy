@@ -1,22 +1,53 @@
 // #region subtask 3
 // Место для второй задачи
 function returnNeighboringNumbers(num) {
-  const result = [num-1, num, num+1];
+  const result = [num - 1, num, num + 1];
   return result;
 }
 console.log(returnNeighboringNumbers(5));
 
+// -------------------------------------------------
 // Место для третьей задачи
-function getMathResult(a, b) {
-  const result = '';
-  
-  for (let i = 1; i < b; i++) {
-    result = a * i + '---';
-  }
-  console.log(result);
-}
-getMathResult(5,3);
+function getMyMathResult(a, b) {
+  let result = '';
 
+  if (typeof(b) != 'number' || b <= 0) {
+    result += a;
+    return +result;
+  }
+
+  for (let i = 1; i <= b; i++) {
+    result += a * i;
+    if (i != b) {
+      result += '---';
+    } 
+  }
+
+  return result;
+}
+console.log(getMyMathResult(7, 0));
+
+// 2-й варіант вирішення 3-й задачи
+function getTeacherMathResult(a, b) {
+  if (typeof(b) !== 'number' || b <= 0) {
+    return a;
+  }
+
+  let result = '';
+
+  for (let i = 1; i <= b; i++) {
+    if (i === b) {
+      result += `${a * i}`;
+    } else {
+      result += `${a * i}---`;
+    } 
+  }
+
+  return result;
+}
+console.log(getTeacherMathResult(4, 0));
+// -------------------------------------------
+// #endregion
 
 // #region subtask 2**
 

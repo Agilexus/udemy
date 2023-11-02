@@ -44,6 +44,7 @@ return
 a + b;
 
 */
+// #endregion
 
 // #region 23 – Цикл в циклі
 /*
