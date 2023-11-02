@@ -1,4 +1,22 @@
 // #region subtask 3
+// Место для второй задачи
+function returnNeighboringNumbers(num) {
+  const result = [num-1, num, num+1];
+  return result;
+}
+console.log(returnNeighboringNumbers(5));
+
+// Место для третьей задачи
+function getMathResult(a, b) {
+  const result = '';
+  
+  for (let i = 1; i < b; i++) {
+    result = a * i + '---';
+  }
+  console.log(result);
+}
+getMathResult(5,3);
+
 
 // #region subtask 2**
 
