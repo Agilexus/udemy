@@ -1,4 +1,106 @@
-// #region subtask 3
+
+
+//#region subtask 7
+// Мій варіант
+// function calculateVolumeAndArea(width) {
+//   let volum = '',
+//       fullArea = '';
+
+//   if (!isNaN(+width) && width > 0 && Number.isInteger(width)) {
+//     volum = width * width * width;
+//     fullArea = width * width * 6;
+    
+//     return `Объем куба: ${volum}, площадь всей поверхности: ${fullArea}`;
+//   }
+
+//   return 'При вычислении произошла ошибка';
+// }
+
+// Варіант вчителя
+function calculateVolumeAndArea(length) {
+  if (typeof(length) !== 'number' || length < 0 || !Number.isInteger(length)) {
+    return 'При вычислении произошла ошибка';
+  }
+
+  let volume = length * length * length,
+      area = 6 * (length * length);
+  
+  return `Объем куба: ${volume}, площадь всей поверхности: ${area}`;
+}
+
+console.log(calculateVolumeAndArea(5));
+console.log(calculateVolumeAndArea(15));
+console.log(calculateVolumeAndArea(15.5));
+console.log(calculateVolumeAndArea('15'));
+console.log(calculateVolumeAndArea(-15));
+
+// --------------------------
+// Мій варіант:
+// function getCoupeNumber(place) {
+//   const wagon = {
+//     1: [1, 2, 3, 4],
+//     2: [5, 6, 7, 8],
+//     3: [9, 10, 11, 12],
+//     4: [13, 14, 15, 16],
+//     5: [17, 18, 19, 20],
+//     6: [21, 22, 23, 24],
+//     7: [25, 26, 27, 29],
+//     8: [29, 30, 31, 32],
+//     9: [33, 34, 35, 36],
+//   };
+
+//   if (!isNaN(+place) && place >= 0 && Number.isInteger(place)) {
+
+//     for (let i = 1; i <= 9; i++) {
+
+//       for (let j = 0; j < wagon[i].length; j++) {
+//         if (wagon[i].includes(place)) {
+//           return i;
+//         }
+//       }
+//     }
+
+//     return 'Таких мест в вагоне не существует';
+//   }
+    
+//   return 'Ошибка. Проверьте правильность введенного номера места';
+// }
+
+//Рішення ChatGPT:
+// function getCoupeNumber(place) {
+//   if (!isNaN(+place) && Number.isInteger(place) && place >= 1 && place <= 36) {
+//     return Math.ceil(place / 4);
+//   } else if (place > 36 || place == 0) {
+//     return 'Такого купе не існує';
+//   }
+
+//   return 'Помилка. Перевірте правильність введеного номера місця.';
+// }
+
+//Рішення вчителя
+function getCoupeNumber(seatNumber) {
+  if (typeof(seatNumber) !== 'number' || seatNumber < 0 || !Number.isInteger(seatNumber)) {
+    return "Ошибка. Проверьте правильность введенного номера места";
+  }
+
+  if (seatNumber === 0 || seatNumber > 36) {
+    return "Таких мест в вагоне не существует";
+  }
+
+  return Math.ceil(seatNumber / 4);
+}
+
+// console.log(Math.ceil(0 / 4));
+console.log(getCoupeNumber(33)); //9
+console.log(getCoupeNumber(7)); // 2
+console.log(getCoupeNumber(300)); // Такого купе не існує
+console.log(getCoupeNumber(0)); // Такого купе не існує
+console.log(getCoupeNumber(7.7)); // Помилка. Перевірте правильність введеного номера місця.
+console.log(getCoupeNumber(-10)); // Помилка. Перевірте правильність введеного номера місця.
+console.log(getCoupeNumber('Hello')); // Помилка. Перевірте правильність введеного номера місця.
+
+
+// #region subtask 6
 // Место для второй задачи
 function returnNeighboringNumbers(num) {
   const result = [num - 1, num, num + 1];
