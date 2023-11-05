@@ -1,6 +1,146 @@
 
+// #region subtusk 9** Фібоначі
+function fib(numb) {
+  if (typeof(numb) !== 'number' || numb <= 0 || !Number.isInteger(numb)) {
+    return '';
+  }
 
-//#region subtask 7
+  const arr = [];
+  let result = '';
+
+  for (let i = 0; i < numb; i++) {
+    if (arr.length === 0) {
+      arr[i] = 0;
+   } else if(arr[i-1] === 0) {
+      arr[i] = 1;
+    } else {
+      arr[i] = arr[i-2] + arr[i-1];
+    }
+  }
+
+for (let i = 0; i < arr.length; i++) {
+  result += arr[i];
+  if (arr.length - 1 !== i) result += ' ';
+}
+
+  return result;
+}
+
+console.log(fib(3));
+console.log(fib(7));
+console.log(fib('7'));
+console.log(fib(1));
+console.log(fib(0));
+
+// Рішення через рекурсію (без перевірок аргументу)
+// function fib(n) {
+//   return n <= 1 ? n : fib(n - 1) + fib (n - 2);
+// }
+
+// Рішення вчителя
+function fib(numb) {
+  if (typeof(numb) !== 'number' || numb <= 0 || !Number.isInteger(numb)) {
+    return '';
+  }
+
+  let result = '',
+      first = 0,
+      second = 1;
+  
+  for (let i = 0; i < numb; i++) {
+    if (i + 1 === numb) {
+      result += `${first}`;
+    } else {
+      result += `${first} `;
+    }
+
+    let third = first + second; // зберігається поточне значення first
+    first = second;
+    second = third; // відповідно тут, third не розраховується, а використовує значення ,яке в нього записане в момент оголошення.
+  }
+
+  return result; 
+}
+console.log(fib(10));
+// #endregion
+
+// #region subtask 8
+function getTimeFromMinutes(min) {
+  if (typeof(min) !== 'number' || min < 0 || min > 600 || !Number.isInteger(min)) {
+    return 'Ошибка, проверьте данные';
+  }
+
+  const hour = Math.floor(min / 60),
+      newMin = min - (Math.floor(min / 60) * 60);
+
+  let type = '';
+  
+  // if (hour == 0) {
+  //   type = 'часов';
+  // } else if (hour == 1) {
+  //   type = 'час';
+  // } else if (hour < 5) {
+  //   type = 'часа';
+  // }
+
+  // Варіант вчителя із switch
+  switch (hour) {
+    // Можна без цієї умови:
+    // case 0:
+    //   type = 'часов';
+    //   break;
+    case 1:
+      type = 'час';
+      break;
+    case 2:
+    case 3:
+    case 4:
+      type = 'часа';
+      break;
+    default:
+      type = 'часов';
+  }
+
+  return `Это ${hour} ${type} и ${newMin} минут`;
+}
+console.log(getTimeFromMinutes(150));
+console.log(getTimeFromMinutes(50));
+console.log(getTimeFromMinutes(0));
+console.log(getTimeFromMinutes(-1));
+
+Task 2
+function findMaxNumber(n1, n2, n3, n4) {
+  const arr = [n1, n2, n3, n4];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (typeof(arr[i]) !== 'number') {
+      return 0;
+    }
+  }
+
+  return Math.max(...arr); // за допомогою оператора ... розпаковується масив і всі елементи стають аргументами
+}
+
+// Варіант вчителя
+// function findMaxNumber(a, b, c, d) {
+//   if (typeof(a) !== 'number'||
+//       typeof(b) !== 'number' ||
+//       typeof(c) !== 'number' ||
+//       typeof(d) !== 'number') {
+//         return 0;
+//   } else {
+//     return Math.max(a, b, c, d);
+//   }
+  
+
+// }
+
+
+console.log(findMaxNumber(1, 5, 6.6, 8));
+console.log(findMaxNumber(1, 5, '6', '10'));
+// #endregion
+
+// #region subtask 7
 // Мій варіант
 // function calculateVolumeAndArea(width) {
 //   let volum = '',
@@ -80,11 +220,11 @@ console.log(calculateVolumeAndArea(-15));
 //Рішення вчителя
 function getCoupeNumber(seatNumber) {
   if (typeof(seatNumber) !== 'number' || seatNumber < 0 || !Number.isInteger(seatNumber)) {
-    return "Ошибка. Проверьте правильность введенного номера места";
+    return 'Ошибка. Проверьте правильность введенного номера места';
   }
 
   if (seatNumber === 0 || seatNumber > 36) {
-    return "Таких мест в вагоне не существует";
+    return 'Таких мест в вагоне не существует';
   }
 
   return Math.ceil(seatNumber / 4);
@@ -98,7 +238,7 @@ console.log(getCoupeNumber(0)); // Такого купе не існує
 console.log(getCoupeNumber(7.7)); // Помилка. Перевірте правильність введеного номера місця.
 console.log(getCoupeNumber(-10)); // Помилка. Перевірте правильність введеного номера місця.
 console.log(getCoupeNumber('Hello')); // Помилка. Перевірте правильність введеного номера місця.
-
+// #endregion
 
 // #region subtask 6
 // Место для второй задачи
