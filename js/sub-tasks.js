@@ -38,29 +38,29 @@ console.log(fib(0));
 // }
 
 // Рішення вчителя
-function fib(numb) {
-  if (typeof(numb) !== 'number' || numb <= 0 || !Number.isInteger(numb)) {
-    return '';
-  }
+// function fib(numb) {
+//   if (typeof(numb) !== 'number' || numb <= 0 || !Number.isInteger(numb)) {
+//     return '';
+//   }
 
-  let result = '',
-      first = 0,
-      second = 1;
+//   let result = '',
+//       first = 0,
+//       second = 1;
   
-  for (let i = 0; i < numb; i++) {
-    if (i + 1 === numb) {
-      result += `${first}`;
-    } else {
-      result += `${first} `;
-    }
+//   for (let i = 0; i < numb; i++) {
+//     if (i + 1 === numb) {
+//       result += `${first}`;
+//     } else {
+//       result += `${first} `;
+//     }
 
-    let third = first + second; // зберігається поточне значення first
-    first = second;
-    second = third; // відповідно тут, third не розраховується, а використовує значення ,яке в нього записане в момент оголошення.
-  }
+//     let third = first + second; // зберігається поточне значення first
+//     first = second;
+//     second = third; // відповідно тут, third не розраховується, а використовує значення ,яке в нього записане в момент оголошення.
+//   }
 
-  return result; 
-}
+//   return result; 
+// }
 console.log(fib(10));
 // #endregion
 
@@ -108,7 +108,7 @@ console.log(getTimeFromMinutes(50));
 console.log(getTimeFromMinutes(0));
 console.log(getTimeFromMinutes(-1));
 
-Task 2
+//Task 2
 function findMaxNumber(n1, n2, n3, n4) {
   const arr = [n1, n2, n3, n4];
 
@@ -370,7 +370,7 @@ for (let i = 0; i <= lines; i++) {
 // Варіант 2:
 for (let i = 0; i <= lines; i++) {
   for (let j = 0; j < lines - i; j++) {
-    result += " ";
+    result += ' ';
   }
   for (let j = 0; j < 2 * i + 1; j += 2) {
     result += '*';
@@ -384,14 +384,14 @@ console.log(result);
 
 // #region example
 for (let i = 0; i < 3; i++) {
-  console.log(`First level: ${i}`)
+  console.log(`First level: ${i}`);
 
   first: for (let j = 0; j < 3; j++) {
-    console.log(`Second level: ${j}`)
+    console.log(`Second level: ${j}`);
 
     for (let k = 0; k < 3; k++) {
       if (k === 1) continue first;
-      console.log(`Third level: ${k}`)
+      console.log(`Third level: ${k}`);
     }
   }
 }
