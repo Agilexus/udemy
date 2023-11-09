@@ -234,7 +234,7 @@ const obg = {
 obg.makeTest();
 
 Деструктуризація (https://learn.javascript.ru/destructuring-assignment)
-const {border, bg} =  obg.colors; \\ таким чином у нас з‘євляється дву нові змінні border і bg
+const {border, bg} =  obg.colors; \\ таким чином у нас з‘євляється дві нові змінні border і bg
 
 В JS все йде від об‘єкта. Наприклад у рядка є метод toUpperCase, а все тому 
 що на базовому рівні рядок теж об‘єкт і отримує цей метод через цепочку 

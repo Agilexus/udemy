@@ -1,4 +1,56 @@
 
+// #region subtask 10 - 12
+const personalPlanPeter = {
+  name: "Peter",
+  age: "29",
+  skills: {
+      languages: ['ru', 'eng'],
+      programmingLangs: {
+          js: '20%',
+          php: '10%'
+      },
+      exp: '1 month'
+  }
+};
+
+function showExperience(plan) {
+  // for (let key in plan) {
+  //   if (typeof(plan[key]) === 'object') { 
+  //     for (let i in plan[key]) { 
+  //       let {exp} = plan[key];
+  //     }
+  //   }
+  // }
+
+  let {skills: {exp}} = plan;
+  
+  return exp;
+
+}
+
+console.log(showExperience(personalPlanPeter));
+
+function showProgrammingLangs(plan) {
+  for (let key in plan) {
+    if (typeof(plan[key]) === 'object') {
+
+      for (let i in plan[key]) { 
+        if (typeof(plan[key][i]) === 'object') {
+          
+        }
+    }
+    
+    
+
+       { 
+      
+        let {exp} = plan[key];
+      }
+    }
+  }
+}
+
+
 // #region subtusk 9** Фібоначі
 function fib(numb) {
   if (typeof(numb) !== 'number' || numb <= 0 || !Number.isInteger(numb)) {
