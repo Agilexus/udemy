@@ -59,30 +59,15 @@ const baseCurrencies = ['USD', 'EUR'];
 const additionalCurrencies = ['UAH', 'RUB', 'CNY'];
 
 function availableCurr(arr, missingCurr) {
-  if (arr.length === 0) {
-    return 'Нет доступных валют';
-  }
+  let str = '';
 
-  let fullCurrList = [...arr];
+  arr.length === 0 
+    ? str += 'Нет доступных валют'
+    : str += 'Доступные валюты:\n';
+  
+  
 
-  for (let i = 0; i < fullCurrList.length; i++) {
-    for (let j = 0; j < missingCurr.length; j++) {
-      console.log('enter');
-      if (fullCurrList[i] === missingCurr[j]) {
-        console.log('000');
-        fullCurrList = fullCurrList.slice(i, 1);
-        console.log(fullCurrList);
-      }
-    }
-  }
-
-  let result = 'Доступные валюты:\n';
-  for (let i = 0; i < fullCurrList.length; i++) {
-    result += fullCurrList[i];
-    result += '\n';
-  }
-
-  return result;
+  return str;
 }
 console.log(availableCurr([...baseCurrencies, ...additionalCurrencies], ['EUR', 'UAH']));
 
