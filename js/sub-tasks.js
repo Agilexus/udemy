@@ -1,5 +1,149 @@
 
-// #region subtask 10 - 12
+
+// #region subtask 12
+// Задача с собеседований. Напишите функцию reverse, которая принимает
+// в себя строку и возвращает эту строку в обратном порядке.
+
+// Пример:
+// const someString = 'This is some strange string';
+// reverse(someString) => 'gnirts egnarts emos si sihT'
+
+// Функцию можно применить к любой строке. Если в функцию приходит не строка - 
+// вернуть сообщение "Ошибка!"
+const someString = 'This is some strange string';
+
+function reverse(str) {
+  if (typeof(str) !== 'string') {return 'Ошибка!';}
+
+  let revers = '';
+
+  for (let i = str.length; i > 0; i--) {
+    revers += str[i];
+  }
+
+  return revers;
+}
+console.log(reverse(someString));
+
+// Задача 2
+// Представьте такую реальную ситуацию. У вас есть банкомат, который выдает деньги 
+// из двух разных банков в разных валютах. Один банк основной с базовыми валютами, 
+// второй дополнительный с прочими валютами:
+
+// const baseCurrencies = ['USD', 'EUR'];
+// const additionalCurrencies = ['UAH', 'RUB', 'CNY'];
+// Вам нужно создать главную функцию банкомата availableCurr, которая принимает два 
+// аргумента: первый - это массив со всеми доступными валютами из двух банков сразу 
+// (сейчас представим, что они не могут повторяться), второй - необязательный аргумент, 
+// который указывает ту валюту, которая сейчас закончилась в банкомате. Если массив в 
+// первом аргументе пустой - то функция возвращает строку 'Нет доступных валют'. 
+// Функция возвращает строку в нужном виде.
+
+// Пример:
+// availableCurr(['UAH', 'RUB', 'CNY'], 'CNY')
+// Вернет строку:
+
+// Доступные валюты:
+// UAH
+// RUB
+
+// Заметьте:
+// - CNY (юань) исчез из списка валют, значит такая валюта закончилась
+
+// - После валюты: стоит перенос строки \n, и после каждой валюты тоже. 
+// Это важно для тестов
+
+// - Данные для первого аргумента должны приходить сразу из двух банков, 
+// причем сначала baseCurrencies, потом additionalCurrencies по порядку
+const baseCurrencies = ['USD', 'EUR'];
+const additionalCurrencies = ['UAH', 'RUB', 'CNY'];
+
+function availableCurr(arr, missingCurr) {
+  if (arr.length === 0) {
+    return 'Нет доступных валют';
+  }
+
+  let fullCurrList = [...arr];
+
+  for (let i = 0; i < fullCurrList.length; i++) {
+    for (let j = 0; j < missingCurr.length; j++) {
+      console.log('enter');
+      if (fullCurrList[i] === missingCurr[j]) {
+        console.log('000');
+        fullCurrList = fullCurrList.slice(i, 1);
+        console.log(fullCurrList);
+      }
+    }
+  }
+
+  let result = 'Доступные валюты:\n';
+  for (let i = 0; i < fullCurrList.length; i++) {
+    result += fullCurrList[i];
+    result += '\n';
+  }
+
+  return result;
+}
+console.log(availableCurr([...baseCurrencies, ...additionalCurrencies], ['EUR', 'UAH']));
+
+// #endregion
+
+// #region subtask 11
+const family = ['Peter', 'Ann', 'Alex', 'Linda'];
+
+function showFamily(arr) {
+    if (arr.length < 1) {
+      return 'Семья пуста';
+    } else {
+      let str = 'Семья состоит из: ';
+
+      for (let i = 0; i < arr.length; i++) {
+        str += arr[i];
+        if (i !== arr.length - 1) {
+          str += ' ';
+        }
+      }
+
+      return str;
+    }
+}
+console.log(showFamily(family));
+
+const favoriteCities = ['liSBon', 'ROME', 'miLan', 'Dublin'];
+
+function standardizeStrings(arr) {
+  arr.forEach(function(item, i, arr) {
+    console.log(item.toLowerCase());
+  });
+}
+standardizeStrings(favoriteCities);
+
+// Задачи:
+// 1) Напишите функцию showFamily, которая будет принимать в себя массив строк 
+// и возвращать сообщение в нужном формате.
+
+// showFamily(family)  => 'Семья состоит из: Peter Ann Alex Linda'
+
+// Имена подставляются автоматически из массива. Если массив пустой, то выводится 
+// сообщение 'Семья пуста'
+
+// 2) напишите функцию standardizeStrings, которая будет принимать в себя массив
+// строк и будет выводить в консоль эти строки в нижнем регистре.
+
+// Пример:
+// standardizeStrings(favoriteCities)  выведет в консоль
+
+// lisbon
+// rome
+// milan
+// dublin
+// Это частая задача в реальности, так как от пользователя нам могут прийти ответы в 
+// самых разных форматах. В том числе и с разными буквами :) Поэтому нам нужно привести 
+// строки в один формат для правильной работы.
+
+// #endregion
+
+// #region subtask 10
 const personalPlanPeter = {
   name: "Peter",
   age: "29",
@@ -10,46 +154,59 @@ const personalPlanPeter = {
           php: '10%'
       },
       exp: '1 month'
+  },
+
+  showAgeAndLangs: function(plan) {
+    let {age, skills: {languages}} = plan;
+    let str = '';
+
+    for (let i = 0; i < languages.length; i++) {
+      str += languages[i];
+      if (i !== languages.length - 1) {
+        str += ' ';
+      }
+    }
+    // #region Варіант вчителя
+    // let str = `Мне ${age} и я владею языками: `;
+    //
+    //languages.forEach(function(lang) {
+    //  str += `${lang.toUpperCase()} `;
+    //});
+    //
+    // return str;
+    // #endregion
+    
+    return `Мне ${age} и я владею языками: ${str.toUpperCase()}`;
   }
 };
+console.log(personalPlanPeter.showAgeAndLangs(personalPlanPeter));
 
 function showExperience(plan) {
-  // for (let key in plan) {
-  //   if (typeof(plan[key]) === 'object') { 
-  //     for (let i in plan[key]) { 
-  //       let {exp} = plan[key];
-  //     }
-  //   }
-  // }
-
   let {skills: {exp}} = plan;
+
+  // Варіант вчителя
+  // const {exp} = plan.skills;
   
   return exp;
-
 }
-
 console.log(showExperience(personalPlanPeter));
 
 function showProgrammingLangs(plan) {
-  for (let key in plan) {
-    if (typeof(plan[key]) === 'object') {
+  let result = '';
+  let {skills: {programmingLangs}} = plan;
 
-      for (let i in plan[key]) { 
-        if (typeof(plan[key][i]) === 'object') {
-          
-        }
-    }
-    
-    
-
-       { 
-      
-        let {exp} = plan[key];
-      }
+  for (let key in programmingLangs) {
+    result += `Язык ${key} изучен на ${programmingLangs[key]}`;
+    if (typeof(key) === 'string') {
+      result += '\n';
     }
   }
-}
 
+  return result;
+}
+console.log(showProgrammingLangs(personalPlanPeter));
+
+// #endregion
 
 // #region subtusk 9** Фібоначі
 function fib(numb) {
