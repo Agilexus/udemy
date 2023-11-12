@@ -1,4 +1,5 @@
 'use strict';
+// Без зайвих коментарів
 
 let numberOfFilms;
 
@@ -10,7 +11,6 @@ function start() {
     numberOfFilms = +prompt('Скільки фільмів ви вже перегляули?', '');
   }
 }
-
 start();
 
 // Основний об‘єкт
@@ -59,7 +59,6 @@ function rememberMyFilms() {
     }
   }
 }
-
 rememberMyFilms();
 
 // Первірка рівня користувача
@@ -74,7 +73,6 @@ function detectPersonalLevel() {
     console.log('Ой, щось не так... Чи ви не дивились фільми?');
   }
 }
-
 detectPersonalLevel();
 
 // Ввиводить основний об‘єкт в консоль
@@ -86,7 +84,6 @@ function showMyDB(hidden) {
   //   console.log(personalMovieDB);
   // }
 }
-
 showMyDB(personalMovieDB.privat);
 
 // Додаємо жанри (+ я додав перевірки)

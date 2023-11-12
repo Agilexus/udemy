@@ -15,13 +15,18 @@ const someString = 'This is some strange string';
 function reverse(str) {
   if (typeof(str) !== 'string') {return 'Ошибка!';}
 
+  // Рішення вчителя
+  // return str.split('').revese().join('');
+
   let revers = '';
 
-  for (let i = str.length; i > 0; i--) {
+  for (let i = str.length-1; i >= 0; i--) {
     revers += str[i];
   }
 
   return revers;
+  
+
 }
 console.log(reverse(someString));
 
@@ -65,11 +70,22 @@ function availableCurr(arr, missingCurr) {
     ? str += 'Нет доступных валют'
     : str += 'Доступные валюты:\n';
   
-  
+  arr.forEach((el, index) => {
+    if (el !== missingCurr) {
+      str += `${el}\n`;
+    }
+  });
+
+    // for (let i = 0; i < arr.length; i++) {
+    //   if (arr[i] === missingCurr) {
+    //     continue;
+    //   }
+    //   str += `${arr[i]}\n`;
+    // }
 
   return str;
 }
-console.log(availableCurr([...baseCurrencies, ...additionalCurrencies], ['EUR', 'UAH']));
+console.log(availableCurr([...baseCurrencies, ...additionalCurrencies], 'EUR'));
 
 // #endregion
 
