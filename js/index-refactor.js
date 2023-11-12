@@ -69,18 +69,18 @@ const personalMovieDB = {
   },
 
   writeYourGenres: () => {
-    // for (let i = 0; i < 3; i++) {
-    //   let genre = prompt(`Ваш улюблений жанр під номером ${i+1}`, '');
+    for (let i = 0; i < 3; i++) {
+      let genre = prompt(`Ваш улюблений жанр під номером ${i+1}`, '');
 
-    //   while (genre == '' || genre == null || !isNaN(+genre)) {
-    //     genre = prompt(`Ваш улюблений жанр під номером ${i+1}`, '');
-    //   }
-    //   personalMovieDB.genres[i] = genre;
-    // }
+      while (genre == '' || genre == null || !isNaN(+genre)) {
+        genre = prompt(`Ваш улюблений жанр під номером ${i+1}`, '');
+      }
+      personalMovieDB.genres[i] = genre;
+    }
 
-    // personalMovieDB.genres.forEach((item, i) => {
-    //   console.log(`Улюблений жанр #${i+1} - це ${item}`);
-    // });
+    personalMovieDB.genres.forEach((item, i) => {
+      console.log(`Улюблений жанр #${i+1} - це ${item}`);
+    });
   
   // #region Варіант вчителя 1:
   //   for (let i = 1; i <= 3; i++) {
@@ -96,18 +96,19 @@ const personalMovieDB = {
   // #endregion
 
   // #region Варіант вчителя 2
-    for (let i = 1; i < 2; i++) {
-      let genres = prompt('Введіь ваші улюблені жанри через кому', '').toLowerCase();
+  //   for (let i = 1; i < 2; i++) {
+  //     let genres = prompt('Введіь ваші улюблені жанри через кому', '').toLowerCase();
 
-      if (genres === '' || genres == null) {
-        console.log('Ви вказали не коректні дані або не залишили поле пустим');
-        i--;
-      } else {
-        personalMovieDB.genres = genres.split(', ');
-        personalMovieDB.genres.sort();
-      }
-    }
-  }
+  //     if (genres === '' || genres == null) {
+  //       console.log('Ви вказали не коректні дані або не залишили поле пустим');
+  //       i--;
+  //     } else {
+  //       personalMovieDB.genres = genres.split(', ');
+  //       personalMovieDB.genres.sort();
+  //     }
+  //   }
+  // }
+  // #endregion
 
 };
 
