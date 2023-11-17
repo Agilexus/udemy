@@ -110,6 +110,7 @@ const personalMovieDB = {
   // }
   // #endregion
 
+  }
 };
 
 personalMovieDB.start();
