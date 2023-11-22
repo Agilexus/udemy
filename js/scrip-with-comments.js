@@ -27,8 +27,19 @@ bg.style.backgroundImage = 'url("img/bg.jpg")';
 let {movies} = movieDB;
 movies.sort();
 
+// Мій варіант
+// myMovies.forEach((item) => {
+//     item.remove();
+// });
 list.innerHTML = '';
 
+// Мій варіант - багато переборів, але правильний
+// for (let i = 0; i < movies.length; i++) {
+//     let li = document.createElement('li');
+//     li.className = 'promo__interactive-item';
+//     li.innerHTML = `${i+1}. ${movies[i]} <div class="delete"></div>`;
+//     list.append(li);
+// }
 movies.forEach((item, i) => {
     list.innerHTML += `
         <li class="promo__interactive-item">${i+1}. ${item}
