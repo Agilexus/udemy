@@ -127,10 +127,6 @@ console.log(result[0]/result[1]);
 */
 // #endregion
 
-
-
-
-
 // #region Навігація по DOM
 /*
 document.body - доступ до body
@@ -226,7 +222,7 @@ document.body.lastElementChild
   });
 
   Перший аргумент в функції завжди об‘єкт виконання, зазвичай записують як
-  event або просто e. Як і всі у всіх о‘єктів у нього є свої властивості.
+  event або просто e. Як і у всіх о‘єктів у нього є свої властивості.
   Приклад використання:
   btn.addEventListener('click', (e) => {
     console.log(e.target); - вивиде кусок html: <button id="btn">Click me</button>
@@ -234,7 +230,7 @@ document.body.lastElementChild
   });
 
   Щоб видалити EventListener потрібно використати removeEventListener,
-  синтаксис такий самий і важлива умова, функція яка була другим аргументом
+  синтаксис такий самий. Але важлива умова, функція яка була другим аргументом
   має бути такою ж. Тому правильно записувати так:
     const deleteElement = (e) => {
       console.log(e.target);
@@ -253,7 +249,7 @@ document.body.lastElementChild
       }
     }
     btn.addEventListener('click', deleteElement);
-  Таким чином наш івен спрацює лише раз
+  Таким чином наш івент спрацює лише раз
     
 
 Всплиття подій - це коли обробник подій спочатку спрацьовує на вкладеному 
