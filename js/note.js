@@ -1,8 +1,413 @@
 // 'use strict'; – деректива, яка каже що ми працюємо в сучасному режимі де не працюють деякі неточності які були в старих стандартих js. Порада використовувати її завжди
 
+// #region 87 Fetch
+/*
+API - application programming interface
+Набір даних і можливостей, які надає якесь готове рішення
+
+DOM API - це різні методи як дозволяють працювати з DOM елементам, 
+по суті воно вбудоване в браузер. Приклад document.querySelector
+
+fetch api - теж вбудована в браузер. Сучасна технологія яка дозволяє
+спілкуватись з сервером і вона побудована на промісах.
+
+Щоб тестувати можна використовувати готове рішення:
+jsonplaceholder.typicode.com - fake online rest api for testing
+
+
+GET запит:
+  fetch('https://jsonplaceholder.typicode.com/todos/1')
+    .then(response => response.json()) 
+    .then(json => console.log(json));
+
+  В результаті отримаємо першу тудушку.
+  Відповідно fetch прймає в себе url звідки ми хочемо отримати дані і
+  якщо не вказувати інші параметри, то це буде класичний get запит.
+  І у відповідь ми отримає проміси, саме тому ми можемо викорстовувати 
+  then.
+
+  .then(response => response.json()) - fetch використовує проміси, 
+    далі ми отримуємо якийсь response (нашу відповідь від сервера), яка
+    відповідно до документації в форматі JSON, а щоб ми могли працювати
+    з ним, нам потрібно трансформувати його в обʼєкт, для цього в fetch є
+    вбудований можливість яка дозволяє це зробити максимально швидко і 
+    зручно: response.json() - перетворю json обʼєкт в js обʼєкт. Але
+    важливо, дана команда повертає проміс
+
+POST
+  fetch('https://jsonplaceholder.typicode.com/posts', {
+    method: "POST",                           // method і body обовʼязкові, якщо метод не get
+    body: "JSON.stringify({name: 'Alex'})",   // передаємо json обʼєкт
+    headers: {
+      'Content-type': 'application/json'      // Як і раніше в уроці 83
+    }
+  })
+  .then(response => response.json()) 
+  .then(json => console.log(json));
+
+  Після такого записту, відповідно до прописаних .then отримаємо 
+  відповідь з обʼєктом в консолі, де буде обʼєкт {name: 'Alex'} який 
+  передавав і його id.
+
+
+(XMLHttpRequest) Старий метод роботи з сервером дає краще розуміння, як 
+працювати з сервером і він все ще може зустрічатись в старих проектах, 
+але в нових всі використовують fetch
+
+
+
+*/
+// #endregion
+
+// #region 86 Promise
+/*
+Допомагає працювати з асинхроними операціями.
+Іншими словами допомагає створити чергу із операцій, якщо щось відбулось,
+то потім має відбутись щось інше...
+
+Один із варіантів, застосування обіцянок, це уникнути callback hall, 
+коли в одному callback викликається інший callback, в якому викликається
+ще один callback і тд... як результат багато вкладень і досить важко 
+читати.
+
+Щоб використовувати Promise, спочатку потрібно його створити:
+  const req = new Promise((resolve, reject) => { ... })
+
+resolve і reject - це функції
+
+Є два методи: then() i catch(). Перший для успішного опрацювання, друге 
+для помилок. А в () записуються там сама callback функція, 
+в then - resolve, а в catch - reject.
+
+
+Приклад
+  console.log('Запит даних...');
+
+  const req = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Підготовка даних');
+
+      const product = {
+        name: 'TV',
+        price: 2000
+      };
+
+      resolve(product); // (product) - це аргумент який буде в resolve і відповідно в then ми можемо його використати
+    }, 2000)
+  })
+
+  req.then((product) => {
+    setTimeout(() => {
+      product.status = 'order';
+      console.log(product);
+    }, 2000);
+  });
+
+  Пояснення коду вище:
+    Ми створили проміс, а після опрацювали успішне виконання, 
+    за допомогою req.then(), де є callback функція, яка являється
+    resolve в нашому promise.
+
+    В promise є resolve(product)
+      (product) - це аргумент який буде в resolve і відповідно в then 
+      ми можемо його використати. Тому ми додали його аргументом в нашу
+      callback функцію.
+
+
+
+Приклад 2 ускладнений:
+  console.log('Запит даних...');
+
+  const req = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Підготовка даних');
+
+      const product = {
+        name: 'TV',
+        price: 2000
+      };
+
+      resolve(product); // (product) - це аргумент який буде в resolve і відповідно в then ми можемо його використати
+    }, 2000)
+  })
+
+  req.then((product) => {
+    const req2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        product.status = 'order';
+        resolve(product);
+      }, 2000);
+    })
+
+    req2.then(data => {
+      console.log(data);
+    });
+  });
+
+  // по своїй суті, код вище нічим не відрізняється ніж якби ми 
+  // використали callback функції... але promise дозволяє нам спростит 
+  // його:
+  
+      console.log('Запит даних...');
+
+      const req = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log('Підготовка даних');
+
+          const product = {
+            name: 'TV',
+            price: 2000
+          };
+
+          resolve(product); // (product) - це аргумент який буде в resolve і відповідно в then ми можемо його використати
+        }, 2000)
+      })
+
+      // спрощеня в тому, що ми в then ми return новий promis і потім
+      // у нас відразу йде новий then.
+      req.then((product) => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            product.status = 'order';
+            resolve(product);
+          }, 2000);
+        });
+      }).then(data => {
+          console.log(data);
+      });
+
+      Відповідно, якщо в останньому then потрібно буде опрацювати ще 
+      один результат, то можна так само return new Promise і потім then.
+      Так само можна з останнього then повернути не лише promise, а і 
+      будь яку інформацію. Для цього допрацюємо останій req.then:
+      
+        req.then((product) => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              product.status = 'order';
+              resolve(product);
+            }, 2000);
+          });
+        }).then(data => {
+          data.modify = true;
+          return data;
+        }).then(data => {
+          console.log(data);
+        });
+
+
+
+Приклад 3: reject
+  console.log('Запит даних...');
+
+  const req = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Підготовка даних');
+
+      const product = {
+        name: 'TV',
+        price: 2000
+      };
+
+      resolve(product); // (product) - це аргумент який буде в resolve і відповідно в then ми можемо його використати
+    }, 2000)
+  })
+
+  req.then((product) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        product.status = 'order';
+        resolve(); // Ось тут ми викликаємо (для прикладу), і нічого в неї не передаємо
+      }, 2000);
+    });
+  }).then(data => {
+    data.modify = true;
+    return data;
+  }).then(data => {
+    console.log(data);
+  }).catch(() => { // catch - зазвичай ставиться вкінці і опрацьовує негативний сценарій
+    console.error('Виникла помилка');
+  });
+
+  Пояснення:
+    Отже, якщо ми наприклад не отримали те що потрібно від сервера, то
+    всі then пропустяться і буде викликаний catch.
+
+
+Приклад 4: finally
+  Окрім then i catch є ще finally - кінцева функція, але на відміну від
+  попередніх, вона не залежить від результату і буде виконана завжди.
+  Відповідно записується в самом кінці після всіх then i catch.
+
+  Отже на тому самому прикладі:
+
+  console.log('Запит даних...');
+
+  const req = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('Підготовка даних');
+
+      const product = {
+        name: 'TV',
+        price: 2000
+      };
+
+      resolve(product); // (product) - це аргумент який буде в resolve і відповідно в then ми можемо його використати
+    }, 2000)
+  })
+
+  req.then((product) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        product.status = 'order';
+        resolve(product);
+      }, 2000);
+    });
+  }).then(data => {
+    data.modify = true;
+    return data;
+  }).then(data => {
+    console.log(data);
+  }).catch(() => { // catch - зазвичай ставиться вкінці і опрацьовує негативний сценарій
+    console.error('Виникла помилка');
+  }).finally(() => {
+    console.log('finally');
+  })
+
+
+В промісах ще є методи all і race. Відразу на прикладі:
+  const test = time => {
+    return new Promise(resolve => {
+      setTimeout(() => resolve(), time);
+    });
+  };
+
+  test(1000).then(() => console.log('1000 ms'));
+  test(2000).then(() => console.log('2000 ms'));
+
+  Пояснення:
+    У нас є функція, в якій є проміс, який буде запускатись через 
+    певний час.
+
+    Отже функцію вище ми заупстили кілька разів, те саме можна зробити
+    з методом all, який приймає в себе масив з промісами:
+      Promise.all([test(1000), test(2000)]).then(() => {
+        console.log('All');
+      }); // час виконання 2 с. (тоді коли 2-й відпрацював)
+
+    Promise.all - чекає виконання всіх промісів, які були передані в
+    масиві і лише потім виконувати then чи catch.
+
+    Приклад: може бути ситуація коли у нас запити на отримання картинок
+    з кілька сервервів але ми хочемо, щоб вони зʼявились на сторінці 
+    одночасно.
+
+Отже а race працює майже навпаки, then спрацює відразу після того, як 
+перший успішний проміс відпрацював. Запис такий самий:
+  Promise.race([test(1000), test(2000)]).then(() => {
+    console.log('All');
+  }); // час викнання 1 с. (як тільки перший відпрацював)
+
+*/
+// #endregion
+
 // #region 84 Реалізаці скрипта відправки даних
 /*
+Застосвання XMLHttpRequest на практиці в проекті food:
 
+  const forms = document.querySelectorAll('form');
+
+  const message = {
+    loading: 'Відправка...',
+    success: 'Дякуємо! Ми скоро зʼяжемось з вами',
+    failure: 'Щось пішло не так...'
+  };
+
+  forms.forEach(item => {
+    postData(item);
+  });
+
+  // 1. Якщо серверу не потрібен JSON
+  // function postData(form) {
+  //   form.addEventListener('submit', (e) => {
+  //     e.preventDefault();
+
+  //     const statusMessage = document.createElement('div');
+  //     statusMessage.classList.add('status');
+  //     statusMessage.textContent = message.loading;
+  //     form.append(statusMessage);
+
+  //     const request = new XMLHttpRequest();
+  //     request.open('POST', 'server.php');
+
+  //     // Важливо, коли у нас звʼязка XMLHttpRequest і form - не потрібні headers, вони встановлюються автоматично
+  //     const formData = new FormData(form); // важливо, щоб всі елементи всередині тегу form мали атрибут name (унікальні в рамках форми)
+  //     request.send(formData);
+
+  //     request.addEventListener('load', () => {
+  //       if (request.status === 200) {
+  //         console.log(request.response);
+  //         statusMessage.textContent = message.success;
+  //         form.reset();
+  //         setTimeout(() => {
+  //           statusMessage.remove();
+  //         }, 5000);
+  //       } else {
+  //         statusMessage.textContent = message.failure;
+  //       }
+  //     });
+
+  //   });
+  // }
+
+  // 2. JSON потрібен для сервера
+  function postData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const statusMessage = document.createElement('div');
+      statusMessage.classList.add('status');
+      statusMessage.textContent = message.loading;
+      form.append(statusMessage);
+
+      
+
+      const request = new XMLHttpRequest();
+      request.open('POST', 'server.php');
+
+      // Тут нам потрібні headers
+      request.setRequestHeader('Content-type', 'application/json');
+
+      const formData = new FormData(form); 
+
+      // Тепер перетворюємо form  в JSON
+      const object = {};
+      formData.forEach((value, key) => {
+        object[key] = value;
+      });
+
+      // Після того, як перетворили нашу форму в обʼєкт, перетворюємо в JSON
+      const json = JSON.stringify(object);
+      request.send(json);
+
+      // Або відразу при відправці:
+      // request.send(JSON.stringify(object));
+
+      request.addEventListener('load', () => {
+        if (request.status === 200) {
+          console.log(request.response);
+          statusMessage.textContent = message.success;
+          form.reset();
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 5000);
+        } else {
+          statusMessage.textContent = message.failure;
+        }
+      });
+
+    });
+  }
 
 */
 // #endregion
@@ -72,7 +477,7 @@ AJAX - Asynchronous JavaScript And XML
       async - по замовчуванню true, можна встановити false, але це рідко потрібно
       login і pass - деякі запити ми не можемо робити без них.
 
-  Коли ми відправляємо запит, то нам потрібно пояснити серверу, що саме ми
+  Headers - коли ми відправляємо запит, то нам потрібно пояснити серверу, що саме ми
   йому відправляємо, для цього існують заголовки (Headers).
 
   .send(body) - коли ми використовує тип запиту post, то ми відправляємо щось

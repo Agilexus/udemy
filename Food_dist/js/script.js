@@ -132,8 +132,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
  // #region modal
   const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal'),
-        modalCloseBtn = document.querySelector('[data-close]');
+        modal = document.querySelector('.modal');
 
   /* Просте рішення з інлайн стилями
   modalTrigger.forEach(btn => {
@@ -167,11 +166,11 @@ window.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = ''; // залишаємо пусті '' і браузер сам вирішить що підставити по дефолту
   }
 
-  modalCloseBtn.addEventListener('click', closeModal);
+  // modalCloseBtn.addEventListener('click', closeModal);
 
   // Закрити вікно по кліку за межами вікна
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    if (e.target === modal || e.target.getAttribute('data-close') == '') {
       closeModal();
     }
   });
@@ -184,7 +183,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   // Відкриваємо вікно через певний проміжок часу
-  const modalTimerId = setTimeout(openModal, 10000);
+  const modalTimerId = setTimeout(openModal, 60000);
 
   // Відкриваємо вікно, коли користувач доскроли до кінця сторінки
   function showModalByScroll() {
@@ -301,5 +300,86 @@ window.addEventListener('DOMContentLoaded', () => {
   // #endregion
 
 
-  
+  // #region Forms - відправка на сервер
+  const forms = document.querySelectorAll('form');
+  const message = {
+    loading: 'img/form/spinner.svg',
+    success: 'Дякуємо! Ми скоро зʼяжемось з вами',
+    failure: 'Щось пішло не так...'
+  };
+
+  function postData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const statusMessage = document.createElement('img');
+      statusMessage.src = message.loading;
+      statusMessage.style.cssText = `
+        display: block;
+        margin: 0 auto;
+      `;
+      // form.append(statusMessage); - вставляє повідомленя в саму форму
+      form.insertAdjacentElement('afterend', statusMessage); // додаємо після form
+
+      const request = new XMLHttpRequest();
+      request.open('POST', 'server.php');
+
+      request.setRequestHeader('Content-type', 'application/json');
+
+      const formData = new FormData(form); 
+
+      const object = {};
+      formData.forEach((value, key) => {
+        object[key] = value;
+      });
+
+      const json = JSON.stringify(object);
+      request.send(json);
+
+      request.addEventListener('load', () => {
+        if (request.status === 200) {
+          console.log(request.response);
+          showThanksModal(message.success);
+          form.reset();
+          statusMessage.remove();
+        } else {
+          showThanksModal(message.failure);
+        }
+      });
+
+    });
+  }
+
+  forms.forEach(item => {
+    postData(item);
+  });
+
+  function showThanksModal(message) {
+    const prevModalDialog = document.querySelector('.modal__dialog');
+    prevModalDialog.classList.add('hide');
+    openModal();
+
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
+      <div class="modal__dialog">
+        <div class="modal__content">
+                <div class="modal__close" data-close >×</div>
+
+                <div class="modal__title">${message}</div>
+        </div>
+      </div>
+    `;
+
+    document.querySelector('.modal').append(thanksModal); // додаємо на сторінку
+
+    setTimeout(() => {
+      thanksModal.remove(); 
+      prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
+      closeModal();
+    }, 3000); // Видаляємо наше модальне вікно
+  }
+  // #endregion
+
 });
