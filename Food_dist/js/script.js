@@ -216,7 +216,6 @@ window.addEventListener('DOMContentLoaded', () => {
       В нашому випадку він не спрацює, так як наш івент спрацьовує при 
       кожному скролі і відповідно вкінці сторінки вже не спрацює.
   */
-
   // #endregion
 
 
@@ -300,7 +299,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // #endregion
 
 
-  // #region Forms - відправка на сервер
+  // #region Forms + відправка на сервер
   const forms = document.querySelectorAll('form');
   const message = {
     loading: 'img/form/spinner.svg',
@@ -321,31 +320,87 @@ window.addEventListener('DOMContentLoaded', () => {
       // form.append(statusMessage); - вставляє повідомленя в саму форму
       form.insertAdjacentElement('afterend', statusMessage); // додаємо після form
 
-      const request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
-
-      request.setRequestHeader('Content-type', 'application/json');
+      // Спосіб із XMLHttpRequest
+      // const request = new XMLHttpRequest();
+      // request.open('POST', 'server.php');
+      // request.setRequestHeader('Content-type', 'application/json');
 
       const formData = new FormData(form); 
 
+      // Відповідає за трасформацію в JSON
       const object = {};
       formData.forEach((value, key) => {
         object[key] = value;
-      });
-
+      }); 
       const json = JSON.stringify(object);
-      request.send(json);
 
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
+      // Спосіб з XMLHttpRequest
+      // request.send(json);
+      // request.addEventListener('load', () => {
+      //   if (request.status === 200) {
+      //     console.log(request.response);
+      //     showThanksModal(message.success);
+      //     form.reset();
+      //     statusMessage.remove();
+      //   } else {
+      //     showThanksModal(message.failure);
+      //   }
+      // });
+      
+      /* fetch який відправляє текстовий формар
+      // fetch('server.php', {
+      //   method: "POST",
+      //   body: formData
+      // })
+      // .then(data => data.text())
+      // .then(data => {
+      //     console.log(data);
+      //     showThanksModal(message.success);
+      //     statusMessage.remove();
+      // })
+      // .catch(() => {
+      //   showThanksModal(message.failure);
+      // })
+      // .finally(() => {
+      //   form.reset();
+      // }); */
+
+
+      // fetch з відправкою json
+      fetch('server.php', {
+        method: "POST",
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: json
+      })
+      .then(data => data.text())
+      .then(data => {
+          console.log(data);
           showThanksModal(message.success);
-          form.reset();
           statusMessage.remove();
-        } else {
-          showThanksModal(message.failure);
-        }
+      })
+      .catch(() => {
+        showThanksModal(message.failure);
+      })
+      .finally(() => {
+        form.reset();
       });
+
+      /* Опис роботи з fetch
+      // Як і раніше statusMessage показує спінер, далі
+      // За допомогою formData postData збираємо всі дані з форми
+      // І за допомогою fetch відправляємо наші дані
+
+       Важливо!!!
+      Проміс який запускається за допомогою fetch не перейде в стан rejected
+      через відповідь http (повʼязана http протоколом), яка є 
+      помилкою (404, 500, 501, 502 і тд) він все рівно виконає дію 
+      нормально (then) - єдине що зміниться це властивість status, 
+      яка буде false. Найголовніше для fetch що він взагалі зміг зробити
+      запит, відповідно помилкою буде проблема з інтернетом або просто
+      щось завадило зробити запит. В цього є свої плюси...
+      */
 
     });
   }
