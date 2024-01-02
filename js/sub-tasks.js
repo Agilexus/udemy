@@ -1,4 +1,174 @@
 
+// #region subtask 21
+const funds = [
+  {amount: -1400},
+  {amount: 2400},
+  {amount: -1000},
+  {amount: 500},
+  {amount: 10400},
+  {amount: -11400}
+];
+
+/* Задача 1
+1) У вас есть небольшой массив с данными о доходах каждой торговой
+точки. Напишите функцию getPositiveIncomeAmount, которая принимает 
+этот массив данных и возвращает сумму только положительных значений 
+из каждого объекта. (число)
+
+Пример:
+getPositiveIncomeAmount(funds) => 13300
+*/
+const getPositiveIncomeAmount = (data) => {
+  // const arr = data.filter(item => item.amount > 0)
+  // .map(item => item.amount);
+
+  // return arr.reduce((sum, curr) => sum + curr);
+
+  //Варіант вчителя
+  return data.filter(item => item.amount > 0).reduce((acc, curr) => acc + curr.amount, 0);
+  // Без 0 заданого як початкове значення, не працює, тому що в 
+  // без 0 початкова значення буде обʼєкт і reduce далі буде
+  // працювати з рядком, тому ми отримаємо: [object Object]50010400
+  // загалом рекомендується використовувати 0, щоб запевнитись
+  // що ми точно отримає цифрове значення.
+};
+console.log(getPositiveIncomeAmount(funds));
+
+
+/* Задача 2
+2) Напишите функцию getTotalIncomeAmount, которая тоже принимает 
+этот массив данных. Если хотя бы один из объектов содержит 
+отрицательное значение поля amount, то функция возвращает сумму 
+всех значений. (число) Если таких значений нет - запускается функция 
+getPositiveIncomeAmount с тем же массивом данных.
+
+Пример:
+getTotalIncomeAmount(funds) => -500
+*/
+const getTotalIncomeAmount = (data) => {
+  // const arr = data.filter(item => item.amount > 0);
+
+  // return arr.length !== data.length 
+  //   ? data.map(item => item.amount).reduce((sum, curr) => sum + curr)
+  //   : getPositiveIncomeAmount(data)
+
+  // Варіант вчителя
+  return data.some(item => item.amount < 0)
+    ? data.reduce((acc, curr) => acc + curr.amount, 0)
+    : getPositiveIncomeAmount(data)
+
+};
+console.log(getTotalIncomeAmount(funds));
+
+// #endregion
+
+// #region subtask 20
+const films = [
+  {
+      name: 'Titanic',
+      rating: 9
+  },
+  {
+      name: 'Die hard 5',
+      rating: 5
+  },
+  {
+      name: 'Matrix',
+      rating: 8
+  },
+  {
+      name: 'Some bad film',
+      rating: 4
+  }
+];
+
+/* Задача 1
+1) У вас есть список фильмов с рейтингом в виде массива объектов. 
+Напишите функцию showGoodFilms, которая будет принимать этот массив, 
+а возвращать будет массив объектов только с теми фильмами, у которых 
+рейтинг больше или равен 8.
+
+P.S. Это довольно типичная задача в программировании. Вспомните, на 
+самых разных сайтах можно так фильтровать любые товары/фильмы/сериалы...
+*/
+function showGoodFilms(arr) {
+  return arr.filter(item => item.rating >= 8);
+}
+console.log(showGoodFilms(films));
+
+/* Задача 2
+2) Напишите функцию showListOfFilms, которая будет принимать этот же 
+массив, а возвращать будет строку, которая содержит названия фильмов 
+через запятую.
+
+Пример:
+showListOfFilms(films) => "Titanic, Die hard 5, Matrix, Some bad film"
+*/
+function showListOfFilms(arr) {
+  // arr = arr.map(item => Object.entries(item));
+  // const names = arr.map(item => item[0][1])
+  // return names.reduce((sum, cur) => `${sum}, ${cur}`)
+
+  // Варіант вчителя
+  return arr.reduce((acc, curr) => `${typeof(acc) === 'object' ? acc.name : acc}, ${curr.name}`);
+  }
+
+console.log(showListOfFilms(films));
+
+/* Задача 3
+3) Напишите функцию setFilmsIds, которая будет принимать этот же 
+массив, а возвращать будет такой же массив с фильмами, но у каждого 
+фильма будет новое поле id. Значение этого поля установите по нумерации 
+фильма.
+
+Пример:
+setFilmsIds(films)  => [   
+  { name: 'Titanic', rating: 9, id: 0 },   
+  { name: 'Die hard 5', rating: 5, id: 1 },   
+  { name: 'Matrix', rating: 8, id: 2 },   
+  { name: 'Some bad film', rating: 4, id: 3 } 
+]
+*/
+function setFilmsIds(arr) {
+  // for (let i = 0; i < arr.length; i++) {
+  //   arr[i].id = i;
+  // }
+  // return arr;
+
+  // Варіант вчителя
+  return arr.map((film, i) => {
+    film.id = i;
+    return film;
+  });
+}
+console.log(setFilmsIds(films));
+
+/* Задача 4
+4) Запишите результат предыдущей функции в переменную tranformedArray. 
+Напишите функцию checkFilms, которая будет проверять, что в каждом из 
+фильмов есть поле id. Если это так - функция возвращает true. Очевидно, 
+что сейчас условие должно выполняться, если мы передаем 
+checkFilms(tranformedArray); :)
+
+P.S. Вот тут вы столкнетесь с интересным моментом, который я хочу, 
+чтобы вы запомнили. Внимательно проследите за тем, что происходит 
+внутри коллбэка и что будет проверяться. Дополнительно расписал этот 
+момент в комментариях в ответах.
+*/
+const tranformedArray = setFilmsIds(films);
+
+function checkFilms(arr) {
+  // arr = arr.map(item => Object.entries(item));
+  // return arr.every(item => item[2][0] === 'id');
+
+  // Варіант вчителя
+  return arr.every(film => film.id || film.id === 0 ? true : false)
+
+}
+console.log(checkFilms(tranformedArray));
+
+// #endregion
+
 // #region subtask 19**
 /*
 
