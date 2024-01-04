@@ -266,105 +266,36 @@ window.addEventListener('DOMContentLoaded', () => {
   const menuBlock = document.querySelector('.menu__field').firstElementChild;
   menuBlock.innerHTML = '';
 
-  const getResource = async (url) => {
-    const res = await fetch(url);
-
-    //ok - це вбудований метод fetch
-    if (!res.ok) {
-      // Викидуємо обʼєкт помилки (це зроблена вручну помилка, яка 
-      // відображаться в консолі), а .status це інший вбудований метод в fetch
-      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-
-    }
-
-    return await res.json();
-  };
-
-  getResource('http://localhost:3000/menu')
-    .then(data => {
-// #region Не зручний але зрозумілий запис
-      // data.forEach(obj => {
-      //   new ItemCard(obj.img, obj.altimg, obj.title, obj.descr, obj.price)
-      //     .render();
-      // });
-// #endregion
-      
-      // Деструктуризація в параметрі
-      data.forEach(({img, altimg, title, descr, price}) => {
-        new ItemCard(img, altimg, title, descr, price, '.menu .container').render();
-      });
-    });
-// #region опис getResource
-/*
-За допомогою запита до сервера, ми отримуємо масив "menu" - масив з
-обʼєктам, а занчить ми можемо перебрати його через forEach і не думати
-про кількість "скільки карток нам потрібно створити".
-
-Той обʼєкт який ми перебираємо, ми деструктурезуємо по окремим частинам
-і ці частини передаємо в наш class ItemCard, який створює нову 
-картку на сторінці
-*/
-// #endregion
-
-// #region створення карточок вручну
-  // new ItemCard(
-  //   "img/tabs/vegy.jpg", 
-  //   "vegy", 
-  //   'Меню "Фитнес"', 
-  //   'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-  //   6,
-  //   ".menu .container"
+  new ItemCard(
+    "img/tabs/vegy.jpg", 
+    "vegy", 
+    'Меню "Фитнес"', 
+    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+    6,
+    ".menu .container"
   
-  // ).render(); // тут клас записується через if в методі render
+  ).render(); // тут клас записується через if в методі render
 
-  // new ItemCard(
-  //   "img/tabs/elite.jpg", 
-  //   "elite", 
-  //   'Меню “Премиум”', 
-  //   'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-  //   15,
-  //   ".menu .container",
-  //   'menu__item'
-  // ).render();
+  new ItemCard(
+    "img/tabs/elite.jpg", 
+    "elite", 
+    'Меню “Премиум”', 
+    'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+    15,
+    ".menu .container",
+    'menu__item'
+  ).render();
 
-  // new ItemCard(
-  //   "img/tabs/post.jpg" , 
-  //   "post", 
-  //   'Меню "Постное"', 
-  //   'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-  //   12,
-  //   ".menu .container",
-  //   'menu__item'
-  // ).render();
-// #endregion
+  new ItemCard(
+    "img/tabs/post.jpg" , 
+    "post", 
+    'Меню "Постное"', 
+    'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+    12,
+    ".menu .container",
+    'menu__item'
+  ).render();
 
-// #region створення карточки без використання класу
-  // getResource('http://localhost:3000/menu')
-  //   .then(data => createCard(data));
-
-  // function createCard(data) {
-  //   data.forEach(({img, altimg, title, descr, price}) => {
-  //     const element = document.createElement('div');
-
-  //     element.classList.add('menu__item');
-
-  //     element.innerHTML = `
-  //       <img src=${img} alt=${altimg}>
-  //       <h3 class="menu__item-subtitle">${title}</h3>
-  //       <div class="menu__item-descr">${descr}</div>
-  //       <div class="menu__item-divider"></div>
-  //       <div class="menu__item-price">
-  //           <div class="menu__item-cost">Цена:</div>
-  //           <div class="menu__item-total"><span>${price}</span> грн/день</div>
-  //       </div>
-  //     `;
-
-  //     document.querySelector('.menu .container').append(element);
-  //   });
-  // }
-
-// #endregion
-  
   // #endregion
 
 
@@ -376,31 +307,25 @@ window.addEventListener('DOMContentLoaded', () => {
     failure: 'Щось пішло не так...'
   };
 
-  // Формуємо обʼєкт з наших полів
   forms.forEach(item => {
     bindPostData(item);
   });
 
-  // Функція для відправки на сервер і обробки результата
-  const postData = async (url, data) => {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: data
-      });
-
-    // Повертаємо проміс, щоб потім можна було з ним працювати за допомогою .then
-    return await res.json();
+  const postData = (url, data) => {
+    const res = fetch(url, {
+      method: "POST",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: data
+    });
   };
 
-  // Функція "привʼязування" постінга
+
   function bindPostData(form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Лоадер
       const statusMessage = document.createElement('img');
       statusMessage.src = message.loading;
       statusMessage.style.cssText = `
@@ -409,78 +334,18 @@ window.addEventListener('DOMContentLoaded', () => {
       `;
       form.insertAdjacentElement('afterend', statusMessage); // додаємо після form
 
-// #region 1 Спосіб із XMLHttpRequest
-      // Спосіб із XMLHttpRequest
-      // const request = new XMLHttpRequest();
-      // request.open('POST', 'server.php');
-      // request.setRequestHeader('Content-type', 'application/json');
-// #endregion
-
-      // За допомогою forEach який викликає дану функцію формуємо обʼєкт formData із елементів нашой форми
+  
       const formData = new FormData(form); 
-      /* formData це
-      об'єкт, який дозволяє збирати дані з HTML-форми в об'єкт для 
-      подальшого використання.
 
-      Ця стрічка створює новий об'єкт FormData на основі елементу форми 
-      (form). Об'єкт FormData автоматично витягує дані з усіх полів 
-      форми і створює об'єкт, в якому ключами є імена полів, а 
-      значеннями - їх введені значення.
-
-      Такий підхід особливо корисний при роботі з формами, оскільки він 
-      дозволяє зручно та ефективно обробляти дані, які вводить користувач. 
-      Потім ви можете використовувати цей об'єкт для подальшої обробки чи 
-      відправки на сервер
-      */
-
-// #region Трасформуємо в JSON
-      // const object = {};
-      // formData.forEach((value, key) => {
-      //   object[key] = value;
-      // }); 
-      // const json = JSON.stringify(object);
-// #endregion
-
-      // Кращий спосіб трансформації в JSON
-      const json = JSON.stringify(Object.fromEntries(formData.entries()));
+      // Відповідає за трасформацію в JSON
+      const object = {};
+      formData.forEach((value, key) => {
+        object[key] = value;
+      }); 
+      const json = JSON.stringify(object);
 
 
-// #region 2 Спосіб з XMLHttpRequest 
-      // request.send(json);
-      // request.addEventListener('load', () => {
-      //   if (request.status === 200) {
-      //     console.log(request.response);
-      //     showThanksModal(message.success);
-      //     form.reset();
-      //     statusMessage.remove();
-      //   } else {
-      //     showThanksModal(message.failure);
-      //   }
-      // });
-// #endregion
-      
-// #region fetch який відправляє текстовий формар
-      // fetch('server.php', {
-      //   method: "POST",
-      //   body: formData
-      // })
-      // .then(data => data.text())
-      // .then(data => {
-      //     console.log(data);
-      //     showThanksModal(message.success);
-      //     statusMessage.remove();
-      // })
-      // .catch(() => {
-      //   showThanksModal(message.failure);
-      // })
-      // .finally(() => {
-      //   form.reset();
-      // });
-// #endregion
-
-
-      // За допомогою fetch відправляємо json
-// #region використання fetch без функції, щоб краще зрозуміти fetch
+      // fetch з відправкою json
       fetch('server.php', {
         method: "POST",
         headers: {
@@ -488,10 +353,7 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         body: json
       })
-// #endregion
-      
-      postData('http://localhost:3000/requests', json)
-      //.then(data => data.text()) - дані вже трансформовані в функції postData
+      .then(data => data.text())
       .then(data => {
           console.log(data);
           showThanksModal(message.success);
@@ -503,26 +365,23 @@ window.addEventListener('DOMContentLoaded', () => {
       .finally(() => {
         form.reset();
       });
-
-// #region Опис роботи з fetch
       // Як і раніше statusMessage показує спінер, далі
       // За допомогою formData postData збираємо всі дані з форми
       // І за допомогою fetch відправляємо наші дані
 
-      // Важливо!!!
-      // Проміс який запускається за допомогою fetch не перейде в стан rejected
-      // через відповідь http (повʼязана http протоколом), яка є 
-      // помилкою (404, 500, 501, 502 і тд) він все рівно виконає дію 
-      // нормально (then) - єдине що зміниться це властивість status, 
-      // яка буде false. Найголовніше для fetch що він взагалі зміг зробити
-      // запит, відповідно помилкою буде проблема з інтернетом або просто
-      // щось завадило зробити запит. В цього є свої плюси...
-// #endregion
+       Важливо!!!
+      Проміс який запускається за допомогою fetch не перейде в стан rejected
+      через відповідь http (повʼязана http протоколом), яка є 
+      помилкою (404, 500, 501, 502 і тд) він все рівно виконає дію 
+      нормально (then) - єдине що зміниться це властивість status, 
+      яка буде false. Найголовніше для fetch що він взагалі зміг зробити
+      запит, відповідно помилкою буде проблема з інтернетом або просто
+      щось завадило зробити запит. В цього є свої плюси...
+      */
 
     });
   }
 
-  // Відображення вікна з результатом
   function showThanksModal(message) {
     const prevModalDialog = document.querySelector('.modal__dialog');
     prevModalDialog.classList.add('hide');
@@ -546,12 +405,12 @@ window.addEventListener('DOMContentLoaded', () => {
       prevModalDialog.classList.add('show');
       prevModalDialog.classList.remove('hide');
       closeModal();
-    }, 3000); // Видаляємо наше модальне вікно
+    }, 3000); 
   }
   // #endregion
 
-  // fetch('http://localhost:3000/menu')
-  //   .then(data => data.json())
-  //   .then(res => console.log(res));
+  fetch('http://localhost:3000/menu')
+    .then(data => data.json())
+    .then(res => console.log(res));
 
 });
