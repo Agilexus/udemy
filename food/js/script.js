@@ -481,13 +481,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
       // За допомогою fetch відправляємо json
 // #region використання fetch без функції, щоб краще зрозуміти fetch
-      fetch('server.php', {
-        method: "POST",
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: json
-      })
+      // fetch('server.php', {
+      //   method: "POST",
+      //   headers: {
+      //     'Content-type': 'application/json'
+      //   },
+      //   body: json
+      // });
 // #endregion
       
       postData('http://localhost:3000/requests', json)
