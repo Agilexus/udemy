@@ -280,8 +280,9 @@ window.addEventListener('DOMContentLoaded', () => {
     return await res.json();
   };
 
-  getResource('http://localhost:3000/menu')
-    .then(data => {
+// #region Запит до сервера без axios
+  // getResource('http://localhost:3000/menu')
+  //   .then(data => {
 // #region Не зручний але зрозумілий запис
       // data.forEach(obj => {
       //   new ItemCard(obj.img, obj.altimg, obj.title, obj.descr, obj.price)
@@ -289,11 +290,11 @@ window.addEventListener('DOMContentLoaded', () => {
       // });
 // #endregion
       
-      // Деструктуризація в параметрі
-      data.forEach(({img, altimg, title, descr, price}) => {
-        new ItemCard(img, altimg, title, descr, price, '.menu .container').render();
-      });
-    });
+    //   // Деструктуризація в параметрі
+    //   data.forEach(({img, altimg, title, descr, price}) => {
+    //     new ItemCard(img, altimg, title, descr, price, '.menu .container').render();
+    //   });
+    // });
 // #region опис getResource
 /*
 За допомогою запита до сервера, ми отримуємо масив "menu" - масив з
@@ -305,8 +306,16 @@ window.addEventListener('DOMContentLoaded', () => {
 картку на сторінці
 */
 // #endregion
+// #endregion
 
-// #region створення карточок вручну
+axios.get('http://localhost:3000/menu')
+.then(res => {
+  res.data.forEach(({img, altimg, title, descr, price}) => { // data це властивість обʼєкта який повертає axios із сервера
+  new ItemCard(img, altimg, title, descr, price, '.menu .container').render();
+  });
+});
+
+// #region створення карточок 1: вручну
   // new ItemCard(
   //   "img/tabs/vegy.jpg", 
   //   "vegy", 
@@ -338,7 +347,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // ).render();
 // #endregion
 
-// #region створення карточки без використання класу
+// #region створення карточки 2: без використання класу
   // getResource('http://localhost:3000/menu')
   //   .then(data => createCard(data));
 
@@ -550,8 +559,431 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   // #endregion
 
-  // fetch('http://localhost:3000/menu')
-  //   .then(data => data.json())
-  //   .then(res => console.log(res));
 
+// #region slider
+  const slides = document.querySelectorAll('.offer__slide'),
+        slider = document.querySelector('.offer__slider'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width; // отримуємо ширину після рендеру slidesWrapper
+
+  let slideIndex = 1;
+  let offset = 0; // наш відступ, щоб розуміти на скільки ми вже відступили
+
+// #region Мій варіант
+  // function showSlide(n) {
+  //   slides[n].classList.add('show', 'fade');
+  //   slides[n].classList.remove('hide');
+  // }
+
+  // function hideSlide() {
+  //   slides.forEach(slide => {
+  //     slide.classList.add('hide');
+  //     slide.classList.remove('show', 'fade');
+  //   });
+  // }
+
+  // hideSlide();
+  // showSlide(slideIndex-1);
+  // total.innerHTML = slides.length < 10 ?`0${slides.length}` : `${slides.length}`;
+  // current.innerHTML = `0${slideIndex}`;
+
+  // next.addEventListener('click', () => {
+  //   slideIndex < slides.length
+  //     ? slideIndex++
+  //     : slideIndex = 1;
+
+  //   hideSlide();
+  //   showSlide(slideIndex-1);
+  //   current.innerHTML = slideIndex < 10 ? `0${slideIndex}` : `${slideIndex}`;
+  // });
+
+  // prev.addEventListener('click', () => {
+  //   slideIndex > 1
+  //     ? slideIndex--
+  //     : slideIndex = slides.length;
+
+  //   hideSlide();
+  //   showSlide(slideIndex-1);
+  //   current.innerHTML = slideIndex < 10 ? `0${slideIndex}` : `${slideIndex}`;
+  // });
+// #endregion
+
+// #region Варіант вчителя 1  
+  // showSlides(slideIndex); 
+  // total.textContent = slides.length < 10 
+  //   ?`0${slides.length}` 
+  //   : `${slides.length}`; 
+
+  // function showSlides(n) {
+  //   if (n > slides.length) {
+  //     slideIndex = 1;
+  //   }
+
+  //   if (n < 1) {
+  //     slideIndex = slides.length;
+  //   }
+
+  //   slides.forEach(slide => {
+  //     slide.classList.add('hide');
+  //     slide.classList.remove('show', 'fade');
+  //   });
+
+  //   slides[slideIndex-1].classList.add('show', 'fade');
+  //   slides[slideIndex-1].classList.remove('hide');
+
+  //   current.textContent = slideIndex < 10 
+  //     ? `0${slideIndex}` 
+  //     : slideIndex;
+  // }
+
+  // function plusSlide(n) {
+  //   showSlides(slideIndex += n);
+  // }
+
+  // prev.addEventListener('click', () => {
+  //   plusSlide(-1);
+  // });
+
+  // next.addEventListener('click', () => {
+  //   plusSlide(1);
+  // });
+// #endregion
+
+// #region Варіант вчителя 2*
+/* Опис рішення
+Для початку в html додаємо слайдеру обгортку .offer__slider-inner. 
+Ця обгортка буде нашим віконцем, через яке ми будемо бачити слайдер
+
+Алгоритм створення:
+  Велика обгортка .offer__slider-wrapper - якій ми призначимо властивість overflow: hidden
+  Тобто все що виходить за межі .offer__slider-wrapper буде приховано
+
+  .offer__slider-inner - буде мати ту ширину що і всі слайди разом взяті
+
+  Відповідно, при натискані на стрілки, в доному рішення слайди будуть переміщатись по
+  відношенню до .offer__slider-wrapper (а не приховуватись, як в попередніх рішеннях).
+  Це буде робитись за допомогою transform
+
+  window.getComputedStyle(slidesWrapper).width; // отримуємо ширину після рендеру slidesWrapper
+*/
+
+  // Налаштовуємо лічильник
+	if (slides.length < 10) {
+		total.textContent = `0${slides.length}`;
+		current.textContent = `0${slideIndex}`;
+	} else {
+		total.textContent = slides.length;
+		current.textContent = slideIndex;
+  }
+
+  // Задаємо ширину slidesField, щоб всередину помістити всі слайди
+  slidesField.style.width = 100 * slides.length + '%';
+
+  // Виставляємо всі слайди по горизонталі
+  slidesField.style.display = 'flex';
+
+  // Додаємл плавність руху слайдів
+  slidesField.style.transition = '0.5s all';
+
+  // Обмежуємо видиму область, щоб приховати не активні слайди
+  slidesWrapper.style.overflow = 'hidden';
+
+  // Задаємо всім слайдам однакову ширину
+  slides.forEach(slide => {
+    slide.style.width = width;
+  });
+
+  // Створюємо і налаштовуємо відображення індикатора
+  slider.style.position = 'relative';
+
+  const indicators = document.createElement('ol'),
+        dots = [];
+
+  indicators.classList.add('.carousel_indicators');
+
+  // Додаємо стилі за допомогою JS
+  indicators.style.cssText = `
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    margin-right: 15%;
+    margin-left: 15%;
+    list-style: none;
+  `;
+
+  slider.append(indicators);
+
+  // Додаємо правильну кількість індикаторів на сторінку
+  for (let i =0; i < slides.length; i++) {
+    const dot = document.createElement('li');
+    dot.setAttribute('data-slide-to', i + 1);
+    dot.classList.add('.dot');
+    dot.style.cssText = `
+      box-sizing: content-box;
+      flex: 0 1 auto;
+      width: 30px;
+      height: 6px;
+      margin-right: 3px;
+      margin-left: 3px;
+      cursor: pointer;
+      background-color: #fff;
+      background-clip: padding-box;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      opacity: .5;
+      transition: opacity .6s ease;
+    `;
+    if (i == 0) {
+      dot.style.opacity = 1;
+    }
+    indicators.append(dot);
+    dots.push(dot); // Формуємо масив із нашими дотсами
+  }
+
+  function deleteNotDigits(str) {
+    return +str.replace(/\D/g, '');
+  }
+
+  next.addEventListener('click', () => {
+    // Перевіряємо чи в нас ще є слайди попереду
+// #region Без регулярного виразу
+    // if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { // width виглядає, як 500px, тому його перетворюємо в числове значення
+    //   offset = 0;
+    // } else {
+    //   offset += +width.slice(0, width.length - 2);
+    // }
+// #endregion
+
+    if (offset == deleteNotDigits(width) * (slides.length - 1)) { 
+      offset = 0;
+    } else {
+      offset += deleteNotDigits(width);
+    }
+
+    // Щоб перейти до наступного нам потрібно
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    // Змінюємо номерацію
+    if (slideIndex == slides.length) {
+      slideIndex = 1;
+    } else {
+      slideIndex++;
+    }
+
+    current.textContent = slideIndex < 10 
+      ? `0${slideIndex}` 
+      : slideIndex;
+
+    // Відмічаємо активний індикатор
+    dots.forEach(dot => dot.style.opacity = '.5');
+    dots[slideIndex - 1].style.opacity = '1';
+  });
+
+  prev.addEventListener('click', () => {
+    // Перевіряємо чи в нас ще є слайди попереду
+    // #region Без регулярного виразу
+    // if (offset == 0) {
+    //   offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+    // } else {
+    //   offset -= +width.slice(0, width.length - 2);
+    // }
+    // #endregion
+
+    if (offset == 0) {
+      offset = deleteNotDigits(width) * (slides.length - 1);
+    } else {
+      offset -= deleteNotDigits(width);
+    }
+
+    // Щоб перейти до попереднього нам потрібно
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    // Змінюємо номерацію
+    if (slideIndex == 1) {
+      slideIndex = slides.length;
+    } else {
+      slideIndex--;
+    }
+
+    current.textContent = slideIndex < 10 
+      ? `0${slideIndex}` 
+      : slideIndex;
+
+    // Відмічаємо активний індикатор
+    dots.forEach(dot => dot.style.opacity = '.5');
+    dots[slideIndex - 1].style.opacity = '1';
+  });
+
+  // Робимо dots клікабельними
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      const slideTo = e.target.getAttribute('data-slide-to');
+
+      slideIndex = slideTo;
+      offset = deleteNotDigits(width) * (slideTo - 1);
+
+      slidesField.style.transform = `translateX(-${offset}px)`;
+
+      current.textContent = slideIndex < 10 
+        ? `0${slideIndex}` 
+        : slideIndex;
+
+      dots.forEach(dot => dot.style.opacity = '.5');
+      dots[slideIndex - 1].style.opacity = '1';
+    });
+
+  });
+// #endregion варіант 3
+
+// #endregion
+
+
+// #region Calculator
+  /* Опис
+  - Беремо дані введені користувачем
+  - Підставляємо в формуло
+  - Виводимо результат
+  */
+  const result = document.querySelector('.calculating__result span');
+
+  let sex, height, weight, age, ratio;
+
+  if (localStorage.getItem('sex')) {
+    sex = localStorage.getItem('sex');
+  } else {
+    sex = 'female';
+    localStorage.setItem('sex', sex);
+  }
+
+  if (localStorage.getItem('ratio')) {
+    ratio = localStorage.getItem('ratio');
+  } else {
+    ratio = 1.375;
+    localStorage.setItem('ratio', ratio);
+  }
+
+  function initLocalSettings (selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+
+    elements.forEach(elem => {
+      elem.classList.remove(activeClass);
+
+      if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+        elem.classList.add(activeClass);
+      } 
+
+      if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+
+  initLocalSettings('#gender div', 'calculating__choose-item_active');
+  initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
+
+
+  function calcTotal() {
+    // Перевіряємо чи всі поля заповнені
+    if (!sex || !weight || !age || !ratio) {
+      result.textContent = '0';
+      return;
+    }
+
+    // Розрахунок по формлуі
+    if (sex === 'female') {
+      result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+    } else {
+      result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+    }
+  }
+  calcTotal();
+
+  function getStaticInfo(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+
+    /* Делегування подій тут працюватиме з багами
+    document.querySelector(parentSelector).addEventListener('click', (e) => {
+      if (e.target.getAttribute('data-ratio')) {
+        ratio = +e.target.getAttribute('data-ratio');
+      } else {
+        sex = e.target.getAttribute('id');
+      }
+
+      // Прибираємо класс активності у всіх
+      elements.forEach(elem => {
+        elem.classList.remove(activeClass);
+      });
+
+      // Назначаємо елементу активний клас
+      e.target.classList.add(activeClass);
+
+      calcTotal();
+    });
+    */
+
+    elements.forEach(elem => {
+      elem.addEventListener('click', (e) => {
+        if (e.target.getAttribute('data-ratio')) {
+          ratio = +e.target.getAttribute('data-ratio');
+          localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
+        } else {
+          sex = e.target.getAttribute('id');
+          localStorage.setItem('sex', e.target.getAttribute('id'));
+        }
+  
+        // Прибираємо класс активності у всіх
+        elements.forEach(elem => {
+          elem.classList.remove(activeClass);
+        });
+  
+        // Назначаємо елементу активний клас
+        e.target.classList.add(activeClass);
+  
+        calcTotal();
+      });
+    });
+  }
+  getStaticInfo('#gender div', 'calculating__choose-item_active');
+  getStaticInfo('.calculating__choose_big div', 'calculating__choose-item_active');
+
+  function getDinamicInfo(selector) {
+    const input = document.querySelector(selector);
+
+    // Отрмуємо дані з полів
+    input.addEventListener('input', () => {
+
+      if(input.value.match(/\D/g)) {
+        input.style.border = '1px solid red';
+      } else {
+        input.style.border = 'none';
+      }
+
+      switch(input.getAttribute('id')) {
+        case 'height':
+          height = +input.value;
+          break;
+        case 'weight':
+          weight = +input.value;
+          break;
+        case 'age':
+          age = +input.value;
+          break;
+      }
+
+      calcTotal();
+    });
+  }
+  getDinamicInfo('#height');
+  getDinamicInfo('#weight');
+  getDinamicInfo('#age');
+// #endregion
 });
