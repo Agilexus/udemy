@@ -6,12 +6,12 @@ module.exports = {
   mode: 'development',
   entry: './js/script.js',
   output: {
-    filename: 'boundle.js',
+    filename: 'bundle.js',
     path: __dirname + '/js'
   },
   watch: true,
 
   devtool: "source-map",
 
-  module:{}
+  module: {}
 };
